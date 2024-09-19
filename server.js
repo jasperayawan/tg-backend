@@ -1,17 +1,25 @@
 const express = require("express")
+const fs = require("fs");
+const https = require("https");
 
 const app = express();
+
+const options = {
+    key: fs.readFileSync("private.key"),
+    cert: fs.readFileSync("certificate.crt"),
+};
 
 app.get('/', async (req, res) => {
     res.send("hello world")
 })
 
-const port = 80;
+const port = 443;
 
-app.get('/.well-known/pki-validation/803006C38152673D4A5F183673A5A2DD.txt', (req, res) => {
-    res.sendFile('/root/tg-backend/803006C38152673D4A5F183673A5A2DD.txt')
-})
 
-app.listen(port, () => {
-    console.log("xiao yan!")
-})
+const server = https.createServer(options, app);
+server.listen(port, () => console.log('Server running on port 443'));
+
+
+// app.listen(port, () => {
+//     console.log("xiao yan!")
+// })
